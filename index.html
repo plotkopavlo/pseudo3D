@@ -43,10 +43,8 @@
 
 
 
-
   var displacementFilter1 = getDestroyFilter('img/map-new1.jpg', image);
   var displacementFilter2 = getDestroyFilter('img/map-new2.jpg', image);
-//  var displacementFilter3 = getDestroyFilter('img/map-new3.jpg', image);
   BgContainer.filters = [displacementFilter1, displacementFilter2];
 
   var count    = 0;
@@ -58,8 +56,7 @@
     count+=0.1;
     var global = getScaleX();
     displacementFilter1.scale.x = aplitude*global;
-    displacementFilter2.scale.x = aplitude/1.5*global;
-//       displacementFilter3.scale.x = 5/1326*width*global;
+    displacementFilter2.scale.x = aplitude/2*global;
 
     app.renderer.render(container);
                    
@@ -67,7 +64,7 @@
 
 
   function getScaleX() {
-      if (gamma !== undefined) {
+      if (window.deviceOrientation) {
           var maxAngle = 30;
           var position = Math.abs(gamma) < maxAngle ? gamma :Math.abs(gamma)/gamma* maxAngle;
           position = position/ maxAngle;
@@ -88,13 +85,14 @@
       displacement.position.x = image.position.x;
       displacement.position.y = image.position.y;
 
-      BgContainer.addChild(displacement);
 
       var displacementFilter = new PIXI.filters.DisplacementFilter(
           displacement
       );
       displacementFilter.scale.y = 0;
       displacementFilter.scale.x = 0;
+
+      BgContainer.addChild(displacement);
 
 
       return displacementFilter;
