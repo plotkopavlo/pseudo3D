@@ -34,10 +34,18 @@
 
     
   var image = PIXI.Sprite.fromImage('img/texture-new.jpg');
-  image.width=height/1280*960;
-  image.height = height;
-  image.position.x = (width-image.width)/2;
-  image.position.y = 0;
+  if(height< width){
+      image.width=height/1280*960;
+      image.height = height;
+      image.position.x = (width-image.width)/2;
+      image.position.y = 0;
+  }else{
+      image.width=width;
+      image.height = width/960*1280;
+      image.position.x = 0;
+      image.position.y = (height-image.height)/2;
+  }
+
   BgContainer.addChild(image);
 
 
@@ -55,6 +63,7 @@
   app.ticker.add(function(delta) {
     count+=0.1;
     var global = getScaleX();
+    console.log(global);
     displacementFilter1.scale.x = aplitude*global;
     displacementFilter2.scale.x = aplitude/2*global;
 
@@ -71,7 +80,6 @@
 
           return  position;
       }
-
       var global = app.renderer.plugins.interaction.mouse.global.x;
 
       return (global-width/2)/width;
