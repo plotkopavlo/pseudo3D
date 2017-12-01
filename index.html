@@ -13,7 +13,6 @@
   <script src="js/pixi.min.js"></script>
 </head>
 <body>
-
 <script>
   var width = window.innerWidth;
   var height = window.innerHeight;
@@ -58,31 +57,32 @@
   var count    = 0;
   var gamma    = 0;
   var aplitude = 20 / 1500* width;
+  var DeviceOrientation = false;
 
 
   app.ticker.add(function(delta) {
     count+=0.1;
     var global = getScaleX();
-    console.log(global);
     displacementFilter1.scale.x = aplitude*global;
     displacementFilter2.scale.x = aplitude/2*global;
 
     app.renderer.render(container);
                    
   });
-
-
   function getScaleX() {
-      if (window.deviceOrientation) {
+      var position;
+      if (DeviceOrientation) {
+
           var maxAngle = 30;
-          var position = Math.abs(gamma) < maxAngle ? gamma :Math.abs(gamma)/gamma* maxAngle;
+          position = Math.abs(gamma) < maxAngle ? gamma :Math.abs(gamma)/gamma* maxAngle;
           position = position/ maxAngle;
 
           return  position;
       }
       var global = app.renderer.plugins.interaction.mouse.global.x;
+      position = Math.abs(global) > 9000 ? 0 : (global-width/2)/width;
 
-      return (global-width/2)/width;
+      return position;
 
   }
 
@@ -110,6 +110,8 @@
 //  }
 
   function handleOrientation(event){
+      DeviceOrientation= true
+
       gamma = event.gamma;
   }
 </script>
