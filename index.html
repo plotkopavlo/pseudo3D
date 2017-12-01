@@ -110,9 +110,10 @@
 //  }
 
   function handleOrientation(event){
-      DeviceOrientation= true
-
-      gamma = event.gamma;
+      if(event.gamma !== null){
+          DeviceOrientation= true;
+          gamma = event.gamma;
+      }
   }
 </script>
   
