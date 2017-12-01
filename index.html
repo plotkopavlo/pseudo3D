@@ -1,0 +1,114 @@
+<!doctype html>
+<html>
+<head lang="en">
+  <meta charset="UTF-8">
+  <title>water</title>
+  <style>
+    *{margin:0;padding: 0;box-sizing: border-box}
+    body, html{
+      height:100vh;
+      width: 100%;
+    }
+    </style>
+  <script src="js/pixi.min.js"></script>
+</head>
+<body>
+
+<script>
+  var width = window.innerWidth;
+  var height = window.innerHeight;
+
+
+  var app = new PIXI.Application(width, height, {
+
+  });
+  document.body.appendChild(app.view);
+  app.stage.interactive = true;
+                                   
+  var container = new PIXI.Container();
+  var FilterContainer = new PIXI.Container();
+  var BgContainer = new PIXI.Container();
+  app.stage.addChild(container);
+  container.addChild(BgContainer);
+  container.addChild(FilterContainer);
+
+    
+  var image = PIXI.Sprite.fromImage('img/texture-new.jpg');
+  image.width=height/1280*960;
+  image.height = height;
+  image.position.x = (width-image.width)/2;
+  image.position.y = 0;
+  BgContainer.addChild(image);
+
+
+
+
+
+  var displacementFilter1 = getDestroyFilter('img/map-new1.jpg', image);
+  var displacementFilter2 = getDestroyFilter('img/map-new2.jpg', image);
+//  var displacementFilter3 = getDestroyFilter('img/map-new3.jpg', image);
+  BgContainer.filters = [displacementFilter1, displacementFilter2];
+
+  var count    = 0;
+  var gamma    = 0;
+  var aplitude = 20 / 1500* width;
+
+
+  app.ticker.add(function(delta) {
+    count+=0.1;
+    var global = getScaleX();
+    displacementFilter1.scale.x = aplitude*global;
+    displacementFilter2.scale.x = aplitude/1.5*global;
+//       displacementFilter3.scale.x = 5/1326*width*global;
+
+    app.renderer.render(container);
+                   
+  });
+
+
+  function getScaleX() {
+      if (gamma !== undefined) {
+          var maxAngle = 30;
+          var position = Math.abs(gamma) < maxAngle ? gamma :Math.abs(gamma)/gamma* maxAngle;
+          position = position/ maxAngle;
+
+          return  position;
+      }
+
+      var global = app.renderer.plugins.interaction.mouse.global.x;
+
+      return (global-width/2)/width;
+
+  }
+
+  function getDestroyFilter(url, image){
+      var displacement = PIXI.Sprite.fromImage(url);
+      displacement.width=image.width;
+      displacement.height = image.height;
+      displacement.position.x = image.position.x;
+      displacement.position.y = image.position.y;
+
+      BgContainer.addChild(displacement);
+
+      var displacementFilter = new PIXI.filters.DisplacementFilter(
+          displacement
+      );
+      displacementFilter.scale.y = 0;
+      displacementFilter.scale.x = 0;
+
+
+      return displacementFilter;
+  }
+  if(window.deviceOrientation){
+      window.addEventListener('deviceorientation', handleOrientation);
+  }
+
+  function handleOrientation(event){
+      gamma = event.gamma;
+  }
+</script>
+  
+</body>
+</html>
+
+
